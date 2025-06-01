@@ -1,73 +1,44 @@
-# Docker Compose file for Vapor
-#
-# Install Docker on your system to run and test
-# your Vapor app in a production-like environment.
-#
-# Note: This file is intended for testing and does not
-# implement best practices for a production deployment.
-#
-# Learn more: https://docs.docker.com/compose/reference/
-#
-#   Build images: docker compose build
-#      Start app: docker compose up app
-# Start database: docker compose up db
-# Run migrations: docker compose run migrate
-#       Stop all: docker compose down (add -v to wipe db)
-#
+version: '3.8'
 
-volumes:
-  db_data:
-
-x-shared_environment: &shared_environment
-  LOG_LEVEL: ${LOG_LEVEL:-debug}
-  DATABASE_HOST: db
-  DATABASE_NAME: vapor_database
-  DATABASE_USERNAME: vapor_username
-  DATABASE_PASSWORD: vapor_password
-  
 services:
   app:
-    image: todoapi:latest
     build:
       context: .
-    environment:
-      <<: *shared_environment
-    depends_on:
-      - db
+      dockerfile: Dockerfile
+    image: todoapi-swift-app:v1 # Вказуємо наш зібраний образ (або Docker Compose збере його сам, якщо тут буде просто ім'я)
+    container_name: todoapi_app_container
     ports:
-      - '8080:8080'
-    # user: '0' # uncomment to run as root for testing purposes even though Dockerfile defines 'vapor' user.
-    command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
-  migrate:
-    image: todoapi:latest
-    build:
-      context: .
+      - "8080:8080"
     environment:
-      <<: *shared_environment
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=todouser
+      - DATABASE_PASSWORD=todopassword
+      - DATABASE_NAME=tododb
+      - VAPOR_ENVIRONMENT=development # Для автоматичних міграцій
     depends_on:
       - db
-    command: ["migrate", "--yes"]
-    deploy:
-      replicas: 0
-  revert:
-    image: todoapi:latest
-    build:
-      context: .
-    environment:
-      <<: *shared_environment
-    depends_on:
-      - db
-    command: ["migrate", "--revert", "--yes"]
-    deploy:
-      replicas: 0
+    networks:
+      - todo_network
+
   db:
-    image: postgres:16-alpine
-    volumes:
-      - db_data:/var/lib/postgresql/data/pgdata
+    image: postgres:15-alpine
+    container_name: todoapi_db_container
     environment:
-      PGDATA: /var/lib/postgresql/data/pgdata
-      POSTGRES_USER: vapor_username
-      POSTGRES_PASSWORD: vapor_password
-      POSTGRES_DB: vapor_database
+      POSTGRES_USER: todouser
+      POSTGRES_PASSWORD: todopassword
+      POSTGRES_DB: tododb
     ports:
-      - '5432:5432'
+      - "5433:5432" # Мапимо на 5433 хоста, щоб не конфліктувати
+    volumes:
+      - postgres_data_volume:/var/lib/postgresql/data
+    networks:
+      - todo_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data_volume:
+
+networks:
+  todo_network:
+    driver: bridge
