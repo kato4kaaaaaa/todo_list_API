@@ -1,4 +1,4 @@
-// swift-tools-version:6.0
+// swift-tools-version:6.1
 import PackageDescription
 
 let package = Package(
@@ -8,30 +8,30 @@ let package = Package(
     ],
     dependencies: [
         // 💧 A server-side Swift web framework.
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.115.0"),
-        // 🗄 An ORM for SQL and NoSQL databases.
-        .package(url: "https://github.com/vapor/fluent.git", from: "4.9.0"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.83.1"),
+        // 🗄 An ORM for Swift and Vapor.
+        .package(url: "https://github.com/vapor/fluent.git", from: "4.8.0"),
         // 🐘 Fluent driver for Postgres.
-        .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.8.0"),
-        // 🔵 Non-blocking, event-driven networking for Swift. Used for custom executors
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
+        .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.7.2"),
+        // 🔵 Non-blocking, event-driven networking for Swift.
+        // .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
     ],
     targets: [
         .executableTarget(
-            name: "TodoAPI",
+            name: "App",
             dependencies: [
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
                 .product(name: "Vapor", package: "vapor"),
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOPosix", package: "swift-nio"),
+                // .product(name: "NIOCore", package: "swift-nio"), // Можна прибрати, якщо не використовується напряму
+                // .product(name: "NIOPosix", package: "swift-nio"),
             ],
             swiftSettings: swiftSettings
         ),
         .testTarget(
-            name: "TodoAPITests",
+            name: "AppTests",
             dependencies: [
-                .target(name: "TodoAPI"),
+                .target(name: "App"), //
                 .product(name: "VaporTesting", package: "vapor"),
             ],
             swiftSettings: swiftSettings
