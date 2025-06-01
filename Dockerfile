@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Копіюємо Swift runtime бібліотеки з образу builder
 COPY --from=builder /usr/lib/swift/linux/*.so* /usr/lib/swift/linux/
-COPY --from=builder /usr/lib/swift/linux/x86_64/*.so* /usr/lib/swift/linux/x86_64/
+
 
 # Копіюємо зібраний виконуваний файл
 # Ім'я "App" має відповідати .executableTarget(name: "App", ...) у Package.swift
