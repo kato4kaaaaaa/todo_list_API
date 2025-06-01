@@ -25,7 +25,7 @@ let package = Package(
                     .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
                     .product(name: "Vapor", package: "vapor"),
                 ],
-                path: "Sources/App", // <--- ДОДАНО ЯВНИЙ ШЛЯХ
+                path: "Sources/App",
                 swiftSettings: swiftSettings
             ),
             .testTarget(
@@ -34,7 +34,7 @@ let package = Package(
                     .target(name: "App"),
                     .product(name: "VaporTesting", package: "vapor"),
                 ],
-                path: "Tests/AppTests", // <--- ДОДАНО ЯВНИЙ ШЛЯХ (переконайтесь, що ваші тести дійсно тут)
+                path: "Tests/TodoAPITests", 
                 swiftSettings: swiftSettings
             )
         ]
