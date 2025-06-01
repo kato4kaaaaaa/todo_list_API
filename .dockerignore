@@ -1,2 +1,27 @@
-.build/
+# Git файли та папки
+.git
+.gitignore
+
+# Файли macOS
+.DS_Store
+
+# Swift Package Manager - тимчасові файли та кеш
 .swiftpm/
+
+# Локальні результати збірки 
+# Ми збираємо все всередині Docker-образу на стадії builder
+.build/
+
+# Файли Xcode 
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+
+
+# Будь-які інші файли або папки, які не потрібні для збірки/запуску в Docker
+# Наприклад:
+# README.md (якщо не потрібен в образі)
+# docs/
+# *.tmp
+# *.bak
