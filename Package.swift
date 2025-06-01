@@ -29,12 +29,12 @@ let package = Package(
                 swiftSettings: swiftSettings
             ),
             .testTarget(
-                name: "AppTests",
+                name: "TodoAPITests",
                 dependencies: [
                     .target(name: "App"),
                     .product(name: "VaporTesting", package: "vapor"),
                 ],
-                path: "Tests/TodoAPITests", 
+                path: "Tests/TodoAPITests",
                 swiftSettings: swiftSettings
             )
         ]
