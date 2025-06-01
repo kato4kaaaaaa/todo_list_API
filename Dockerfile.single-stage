@@ -1,0 +1,23 @@
+FROM swift:6.1-focal
+
+WORKDIR /app
+
+# Копіюємо файли залежностей
+COPY Package.swift Package.resolved ./
+RUN swift package resolve
+
+# Копіюємо весь код
+COPY Sources ./Sources
+COPY Tests ./Tests 
+# COPY Public ./Public 
+# COPY Resources ./Resources 
+
+# Збираємо проект
+RUN swift build --configuration release
+
+# Відкриваємо порт
+EXPOSE 8080
+
+# Команда для запуску
+# Шлях до виконуваного файлу буде .build/release/App
+CMD [".build/release/App", "serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
