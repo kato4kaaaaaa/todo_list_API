@@ -14,6 +14,8 @@ COPY Sources ./Sources
 # COPY Resources ./Resources 
 
 # Збираємо проект в release конфігурації
+COPY Tests ./Tests
+
 RUN swift build --configuration release
 
 
