@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    image: todoapi-swift-app:v1 # Вказуємо наш зібраний образ (або Docker Compose збере його сам, якщо тут буде просто ім'я)
+    image: todoapi-swift-app:v1
     container_name: todoapi_app_container
     ports:
       - "8080:8080"
@@ -15,9 +13,10 @@ services:
       - DATABASE_USERNAME=todouser
       - DATABASE_PASSWORD=todopassword
       - DATABASE_NAME=tododb
-      - VAPOR_ENVIRONMENT=development # Для автоматичних міграцій
+      - VAPOR_ENVIRONMENT=development
     depends_on:
-      - db
+      db:
+        condition: service_healthy # Запускати app тільки коли db стане "healthy"
     networks:
       - todo_network
 
@@ -29,12 +28,19 @@ services:
       POSTGRES_PASSWORD: todopassword
       POSTGRES_DB: tododb
     ports:
-      - "5433:5432" # Мапимо на 5433 хоста, щоб не конфліктувати
+      - "5433:5432"
     volumes:
       - postgres_data_volume:/var/lib/postgresql/data
     networks:
       - todo_network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todouser -d tododb -h localhost"]
+      interval: 5s  # Як часто перевіряти
+      timeout: 5s   # Таймаут для перевірки
+      retries: 5    # Кількість спроб перед тим, як вважати сервіс нездоровим
+      start_period: 10s # Період на початку, протягом якого невдалі перевірки не рахуються (дає час на ініціалізацію)
+
 
 volumes:
   postgres_data_volume:
