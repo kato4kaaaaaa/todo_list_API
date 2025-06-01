@@ -11,14 +11,13 @@ RUN swift package resolve
 
 # Копіюємо решту коду проекту
 COPY Sources ./Sources
-COPY Public ./Public # Якщо у вас є тека Public і вона використовується
-# COPY Resources ./Resources # Якщо у вас є тека Resources
+# COPY Resources ./Resources 
 
 # Збираємо проект в release конфігурації
 RUN swift build --configuration release
 
-# --- Стадія 2: Запуск ---
-FROM ubuntu:focal # Або ubuntu:22.04 (jammy)
+
+FROM ubuntu:focal 
 
 WORKDIR /app
 

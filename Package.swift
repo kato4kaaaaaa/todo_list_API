@@ -16,27 +16,29 @@ let package = Package(
         // 🔵 Non-blocking, event-driven networking for Swift.
         // .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
     ],
-    targets: [
-        .executableTarget(
-            name: "App",
-            dependencies: [
-                .product(name: "Fluent", package: "fluent"),
-                .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
-                .product(name: "Vapor", package: "vapor"),
-                // .product(name: "NIOCore", package: "swift-nio"), // Можна прибрати, якщо не використовується напряму
-                // .product(name: "NIOPosix", package: "swift-nio"),
-            ],
-            swiftSettings: swiftSettings
-        ),
-        .testTarget(
-            name: "AppTests",
-            dependencies: [
-                .target(name: "App"), //
-                .product(name: "VaporTesting", package: "vapor"),
-            ],
-            swiftSettings: swiftSettings
-        )
-    ]
+    // ...
+        targets: [
+            .executableTarget(
+                name: "App",
+                dependencies: [
+                    .product(name: "Fluent", package: "fluent"),
+                    .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
+                    .product(name: "Vapor", package: "vapor"),
+                ],
+                path: "Sources/App", // <--- ДОДАНО ЯВНИЙ ШЛЯХ
+                swiftSettings: swiftSettings
+            ),
+            .testTarget(
+                name: "AppTests",
+                dependencies: [
+                    .target(name: "App"),
+                    .product(name: "VaporTesting", package: "vapor"),
+                ],
+                path: "Tests/AppTests", // <--- ДОДАНО ЯВНИЙ ШЛЯХ (переконайтесь, що ваші тести дійсно тут)
+                swiftSettings: swiftSettings
+            )
+        ]
+    
 )
 
 var swiftSettings: [SwiftSetting] { [
